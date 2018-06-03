@@ -22,7 +22,7 @@ export default function three_draw(dom, geojson, testData) {
       antialias: true,
       alpha: true,
       precision: 'highp',
-      devicePixelRatio: 2
+      // devicePixelRatio: 2
    });
    renderer.setSize(width, heigth);
    renderer.setClearColor(new THREE.Color(0, 0, 0));
@@ -36,7 +36,6 @@ export default function three_draw(dom, geojson, testData) {
    orbitControl.maxDistance = 2000;
 
    dom.appendChild(renderer.domElement);
-   loop();
 
    let axesHelper = new THREE.AxesHelper(1000);
    scene.add(axesHelper);
@@ -160,15 +159,24 @@ export default function three_draw(dom, geojson, testData) {
 
    // let vector = new THREE.Vector2();
 
+   // let cubeGeometry = new THREE.BoxGeometry(20, 20, 100);
+   // let cubeMaterial = new THREE.MeshBasicMaterial({
+   //    color: 0xffff00
+   // });
+   // let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+   // scene.add(cube);
+
    // 点的交互
+   let renderDomRect = renderer.domElement.getBoundingClientRect();
    function onMouseMove(event) {
       event.preventDefault();
 
-      let vector = new THREE.Vector2((event.clientX / width) * 2 - 1, -(event.clientY / heigth) * 2 + 1);
-      // vector = vector.unproject(camera);
+      let vector = new THREE.Vector2(((event.clientX - renderDomRect.left) / (width - renderDomRect.left)) * 2 - 1, -((event.clientY - renderDomRect.top) / (heigth - renderDomRect.top)) * 2 + 1);
       let raycaster = new THREE.Raycaster();
-      // let raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+      raycaster.far = 2000;
+      raycaster.near = 0.1;
       raycaster.setFromCamera(vector, camera);
+
       let intersects = raycaster.intersectObject(points);
 
       if(intersects.length > 0) {
@@ -245,6 +253,8 @@ export default function three_draw(dom, geojson, testData) {
    // scene.add(planeMesh);
 
    // ************************
+
+   loop();
 
    function loop() {
       requestAnimationFrame(loop);

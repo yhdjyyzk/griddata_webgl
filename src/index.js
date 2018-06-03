@@ -1,9 +1,11 @@
+import './index.scss';
+
 import three_draw from './th';
 // ------------------------------
 let div = document.createElement('div');
 div.style.width = '800px';
 div.style.height = '500px';
-div.style.border = 'solid 1px red';
+// div.style.border = 'solid 1px red';
 document.body.appendChild(div);
 
 ((async function () {
