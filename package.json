@@ -38,6 +38,7 @@
     "babel-runtime": "^6.26.0",
     "d3": "^5.4.0",
     "three": "^0.93.0",
+    "three-orbitcontrols": "^2.1.2",
     "zrender": "^4.0.3"
   }
 }

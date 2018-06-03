@@ -3,12 +3,16 @@ import * as pathTool from 'zrender/src/tool/path';
 import * as THREE from 'three';
 import geo from './geo';
 import Point from './point';
+import OrbitControls from 'three-orbitcontrols';
 
 export default function three_draw(dom, geojson, testData) {
    let width = getSize(dom.style.width);
    let heigth = getSize(dom.style.height);
 
    let scene = new THREE.Scene();
+   scene.translateX(-300);
+   scene.translateY(-300);
+
    let camera = new THREE.PerspectiveCamera(45, width / heigth, 0.1, 2000);
    camera.position.set(200, 300, 800);
    // camera.position.set(-500, 300, 800);
@@ -17,6 +21,15 @@ export default function three_draw(dom, geojson, testData) {
    let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
    renderer.setSize(width, heigth);
    renderer.setClearColor(new THREE.Color(0, 0, 0));
+
+   // 控制
+   let orbitControl = new OrbitControls(camera, renderer.domElement);
+   orbitControl.enableDamping = true;
+   orbitControl.dampingFactor = 0.25;
+   orbitControl.enableZoom = true;
+   orbitControl.minDistance = 0.1;
+   orbitControl.maxDistance = 2000;
+
    dom.appendChild(renderer.domElement);
    loop();
 
@@ -199,7 +212,7 @@ export default function three_draw(dom, geojson, testData) {
          }
       `,
       side: THREE.DoubleSide,
-      // wireframe: true
+      wireframe: true
    });
    let planeMesh = new THREE.Mesh(palneGeometry, planeMaterial);
    scene.add(planeMesh);
@@ -208,7 +221,8 @@ export default function three_draw(dom, geojson, testData) {
 
    function loop() {
       requestAnimationFrame(loop);
-      scene.rotation.y += 0.01;
+      // scene.rotation.y += 0.01;
+      orbitControl.update();
       renderer.render(scene, camera);
    }
 }
