@@ -10,7 +10,7 @@ export default function three_draw(dom, geojson, testData) {
    let heigth = getSize(dom.style.height);
 
    let scene = new THREE.Scene();
-   scene.translateX(-300);
+   scene.translateX(-200);
    scene.translateY(-300);
 
    let camera = new THREE.PerspectiveCamera(45, width / heigth, 0.1, 2000);
@@ -18,7 +18,12 @@ export default function three_draw(dom, geojson, testData) {
    // camera.position.set(-500, 300, 800);
    // camera.lookAt(200, 300, 0);
 
-   let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+   let renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      precision: 'highp',
+      devicePixelRatio: 2
+   });
    renderer.setSize(width, heigth);
    renderer.setClearColor(new THREE.Color(0, 0, 0));
 
@@ -106,7 +111,7 @@ export default function three_draw(dom, geojson, testData) {
       color.setRGB(vx, vy, vz);
       colors.push(color.r, color.g, color.b);
       // positions.push(pos[0], pos[1], 20);
-      positions.push(pos[0], pos[1], z * 20);
+      positions.push(pos[0], pos[1], z * 10);
    });
 
    pointsGeometry.addAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
@@ -145,11 +150,33 @@ export default function three_draw(dom, geojson, testData) {
             }
          }
       `,
-      vertexColors: THREE.VertexColors
+      vertexColors: THREE.VertexColors,
+      depthTest: true,
+      depthWrite: true
    });
 
    let points = new THREE.Points(pointsGeometry, pointMaterial);
    scene.add(points);
+
+   // let vector = new THREE.Vector2();
+
+   // 点的交互
+   function onMouseMove(event) {
+      event.preventDefault();
+
+      let vector = new THREE.Vector2((event.clientX / width) * 2 - 1, -(event.clientY / heigth) * 2 + 1);
+      // vector = vector.unproject(camera);
+      let raycaster = new THREE.Raycaster();
+      // let raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+      raycaster.setFromCamera(vector, camera);
+      let intersects = raycaster.intersectObject(points);
+
+      if(intersects.length > 0) {
+         console.log(intersects);
+      }
+   }
+
+   dom.addEventListener('mousemove', onMouseMove, false);
 
    //  创建网格
    let geoWidth = geoBounds.width;
@@ -215,7 +242,7 @@ export default function three_draw(dom, geojson, testData) {
       wireframe: true
    });
    let planeMesh = new THREE.Mesh(palneGeometry, planeMaterial);
-   scene.add(planeMesh);
+   // scene.add(planeMesh);
 
    // ************************
 
@@ -224,6 +251,7 @@ export default function three_draw(dom, geojson, testData) {
       // scene.rotation.y += 0.01;
       orbitControl.update();
       renderer.render(scene, camera);
+      // rayObject();
    }
 }
 
