@@ -250,7 +250,7 @@ export default function three_draw(dom, geojson, testData) {
       wireframe: true
    });
    let planeMesh = new THREE.Mesh(palneGeometry, planeMaterial);
-   // scene.add(planeMesh);
+   scene.add(planeMesh);
 
    // ************************
 
