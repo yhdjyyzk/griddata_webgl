@@ -106,6 +106,8 @@ export default function three_draw(dom, geojson, testData) {
    let pointsGeometry = new THREE.BufferGeometry();
    let color = new THREE.Color();
 
+   let color_func = d3.scaleLinear().domain([0, 22.5]).range([0x0000ff, 0xff0000]);
+
    testData.sumPre.forEach(s => {
       let pos = projection([s.lon, s.lat]);
 
@@ -116,7 +118,8 @@ export default function three_draw(dom, geojson, testData) {
       let vx = x / 500;
       let vy = y / 500;
       let vz = 1.0;
-      color.setRGB(vx, vy, vz);
+      // color.setRGB(vx, vy, vz);
+      color.setHex(Math.floor(color_func(s.sum_pre)));
       colors.push(color.r, color.g, color.b);
       // positions.push(pos[0], pos[1], 20);
       positions.push(pos[0], pos[1], z * 10);
@@ -164,7 +167,7 @@ export default function three_draw(dom, geojson, testData) {
    });
 
    let points = new THREE.Points(pointsGeometry, pointMaterial);
-   scene.add(points);
+   // scene.add(points);
 
    // 点的交互
    let renderDomRect = renderer.domElement.getBoundingClientRect();
@@ -209,7 +212,7 @@ export default function three_draw(dom, geojson, testData) {
    let geoX = geoBounds.x;
    let geoY = geoBounds.y;
 
-   let gridSize = Math.floor(Math.min(geoWidth / 3, geoHeight / 3)); // 网格大小
+   let gridSize = Math.floor(Math.min(geoWidth / 2, geoHeight / 2)); // 网格大小
    let positionArr = [];
 
    for(let i = 0; i < positions.length; i += 3) {
@@ -217,6 +220,8 @@ export default function three_draw(dom, geojson, testData) {
          [positions[i], positions[i + 1], positions[i + 2]]
       );
    }
+
+   // let zValues = [];
 
    function meshFunction(u0, v0, dest) {
       let result = dest || new THREE.Vector3();
@@ -241,10 +246,22 @@ export default function three_draw(dom, geojson, testData) {
          result.z = z;
       }
 
+      // zValues.push(result.z);
       return result;
    };
-
-   let palneGeometry = new THREE.ParametricGeometry(meshFunction, gridSize, gridSize);
+   let palneGeometry = new THREE.ParametricBufferGeometry(meshFunction, gridSize, gridSize);
+   // // console.log(zValues);
+   // let maxZ = Math.max(...zValues);
+   // let point_a_color_func = d3.scaleLinear().domain([0, maxZ]).range([0x0000ff, 0xff0000]);
+   // let point_a_colors = [];
+   // let point_color = new THREE.Color();
+   // zValues.forEach(z => {
+   //    point_color.setHex('0x' + `${Math.floor(point_a_color_func(z))}`.toString(16));
+   //    point_a_colors.push(point_color.r, point_color.g, point_color.b);
+   // });
+   // // console.log(point_a_colors);
+   // palneGeometry.addAttribute('a_color', new THREE.Float32BufferAttribute(point_a_colors, 3));
+   // console.log(palneGeometry);
    let planeMaterial = new THREE.ShaderMaterial({
       vertexShader: `
          varying vec3 pos;
@@ -255,19 +272,31 @@ export default function three_draw(dom, geojson, testData) {
          }
       `,
       fragmentShader: `
-         precision mediump float;
-
          varying vec3 pos;
+         uniform float maxZ;
 
          void main() {
-            gl_FragColor = vec4(pos / 500.0, 1.0);
+            gl_FragColor = vec4(pos / 220.0, 1.0);
+         }
+
+         // color linear
+         vec3 color_linear(float z) {
+            float r = 0.1;
+            float g = 0.2;
+            float b = 0.4;
+
+            return vec3(r, g, b);
          }
       `,
+      uniforms: {
+         // 'maxZ': {type: 'f', value: maxZ}
+      },
       side: THREE.DoubleSide,
-      wireframe: true
+      // wireframe: true
    });
    let planeMesh = new THREE.Mesh(palneGeometry, planeMaterial);
    scene.add(planeMesh);
+   scene.add(points);
 
    // ************************
 

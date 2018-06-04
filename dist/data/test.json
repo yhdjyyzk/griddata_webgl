@@ -1,0 +1,417 @@
+﻿{
+   "cityCode": [
+      "120116"
+   ],
+   "datatime": "20180526",
+   "caption": "测试图",
+   "legendType": "r",
+   "featureType": "tmax",
+   "dataType": "grid",
+   "mapType": "contour_legend",
+   "weight": 6,
+   "renderColors": {
+      "data": [
+         {
+            "minvalue": -99,
+            "maxvalue": 0,
+            "caption": "<0",
+            "color": "255,255,255"
+         },
+         {
+            "minvalue": 0,
+            "maxvalue": 10,
+            "caption": "0~10",
+            "color": "153,255,153"
+         },
+         {
+            "minvalue": 10,
+            "maxvalue": 25,
+            "caption": "10~25",
+            "color": "50,207,50"
+         },
+         {
+            "minvalue": 25,
+            "maxvalue": 50,
+            "caption": "25~50",
+            "color": "102,205,255"
+         },
+         {
+            "minvalue": 50,
+            "maxvalue": 100,
+            "caption": "50-100",
+            "color": "0,0,255"
+         },
+         {
+            "minvalue": 100,
+            "maxvalue": 250,
+            "caption": "100-250",
+            "color": "255,0,255"
+         },
+         {
+            "minvalue": 250,
+            "maxvalue": 990,
+            "caption": ">=250",
+            "color": "153,0,50"
+         }
+      ]
+   },
+   "sumPre": [
+      {
+         "Station_Id_C": "A2802",
+         "Station_Name": "滨海新区大田镇",
+         "lat": "39.2719",
+         "lon": "117.7844",
+         "sum_pre": "2.9"
+      },
+      {
+         "Station_Id_C": "A3177",
+         "Station_Name": "滨海新区东疆港沙滩",
+         "lat": "39.005",
+         "lon": "117.8253",
+         "sum_pre": "1.7"
+      },
+      {
+         "Station_Id_C": "A3161",
+         "Station_Name": "滨海新区新北街",
+         "lat": "39.0639",
+         "lon": "117.6617",
+         "sum_pre": "5.5"
+      },
+      {
+         "Station_Id_C": "A2604",
+         "Station_Name": "滨海新区滨海水厂",
+         "lat": "38.7069",
+         "lon": "117.4247",
+         "sum_pre": "2.9"
+      },
+      {
+         "Station_Id_C": "A2607",
+         "Station_Name": "滨海新区太平镇",
+         "lat": "38.6294",
+         "lon": "117.3803",
+         "sum_pre": "5.10"
+      },
+      {
+         "Station_Id_C": "A2662",
+         "Station_Name": "滨海新区马棚口",
+         "lat": "38.6603",
+         "lon": "117.5219",
+         "sum_pre": "1.8"
+      },
+      {
+         "Station_Id_C": "A2666",
+         "Station_Name": "滨海新区老四场",
+         "lat": "38.9044",
+         "lon": "117.6469",
+         "sum_pre": "1.9"
+      },
+      {
+         "Station_Id_C": "A3165",
+         "Station_Name": "滨海新区旅游区管委会",
+         "lat": "39.1067",
+         "lon": "117.7489",
+         "sum_pre": "2"
+      },
+      {
+         "Station_Id_C": "A3107",
+         "Station_Name": "滨海新区海滨浴场",
+         "lat": "38.8525",
+         "lon": "117.6264",
+         "sum_pre": "0.5"
+      },
+      {
+         "Station_Id_C": "A3102",
+         "Station_Name": "滨海新区杭州道街",
+         "lat": "39.0342",
+         "lon": "117.67",
+         "sum_pre": "3"
+      },
+      {
+         "Station_Id_C": "A3104",
+         "Station_Name": "滨海新区北塘街",
+         "lat": "39.1728",
+         "lon": "117.6469",
+         "sum_pre": "9.5"
+      },
+      {
+         "Station_Id_C": "A2665",
+         "Station_Name": "滨海新区上古林东",
+         "lat": "38.8275",
+         "lon": "117.4978",
+         "sum_pre": "0"
+      },
+      {
+         "Station_Id_C": "A2605",
+         "Station_Name": "滨海新区南港工业区",
+         "lat": "38.7322",
+         "lon": "117.5481",
+         "sum_pre": "2.4"
+      },
+      {
+         "Station_Id_C": "A3174",
+         "Station_Name": "滨海新区开发西区中南组",
+         "lat": "39.07",
+         "lon": "117.5383",
+         "sum_pre": "6.5"
+      },
+      {
+         "Station_Id_C": "A3168",
+         "Station_Name": "滨海新区十一大街",
+         "lat": "39.0586",
+         "lon": "117.735",
+         "sum_pre": "1.8"
+      },
+      {
+         "Station_Id_C": "A3166",
+         "Station_Name": "滨海新区起步区泵站",
+         "lat": "39.0461",
+         "lon": "117.6914",
+         "sum_pre": "0.3"
+      },
+      {
+         "Station_Id_C": "A2664",
+         "Station_Name": "滨海新区沙井子",
+         "lat": "38.6533",
+         "lon": "117.3706",
+         "sum_pre": "5.8"
+      },
+      {
+         "Station_Id_C": "A2861",
+         "Station_Name": "滨海新区洒金坨",
+         "lat": "39.2403",
+         "lon": "118.0008",
+         "sum_pre": "0.3"
+      },
+      {
+         "Station_Id_C": "54530",
+         "Station_Name": "汉沽国家一般气象站",
+         "lat": "39.2333",
+         "lon": "117.7667",
+         "sum_pre": "4.7"
+      },
+      {
+         "Station_Id_C": "A3105",
+         "Station_Name": "滨海新区河滨公园",
+         "lat": "39.0167",
+         "lon": "117.65",
+         "sum_pre": "1.40"
+      },
+      {
+         "Station_Id_C": "A3169",
+         "Station_Name": "滨海新区泰达街",
+         "lat": "39.0328",
+         "lon": "117.6906",
+         "sum_pre": "1.2"
+      },
+      {
+         "Station_Id_C": "A2804",
+         "Station_Name": "滨海新区大神堂",
+         "lat": "39.2211",
+         "lon": "117.9597",
+         "sum_pre": "0.2"
+      },
+      {
+         "Station_Id_C": "A2603",
+         "Station_Name": "滨海新区刘岗庄",
+         "lat": "38.7106",
+         "lon": "117.2486",
+         "sum_pre": "6.60"
+      },
+      {
+         "Station_Id_C": "A2606",
+         "Station_Name": "滨海新区南台村",
+         "lat": "38.8183",
+         "lon": "117.31",
+         "sum_pre": "5.8"
+      },
+      {
+         "Station_Id_C": "A3163",
+         "Station_Name": "滨海新区盐场",
+         "lat": "38.9817",
+         "lon": "117.6364",
+         "sum_pre": "2"
+      },
+      {
+         "Station_Id_C": "A2602",
+         "Station_Name": "滨海新区官港水库",
+         "lat": "38.9275",
+         "lon": "117.5039",
+         "sum_pre": "4.1"
+      },
+      {
+         "Station_Id_C": "A2608",
+         "Station_Name": "滨海新区万家码头",
+         "lat": "38.8397",
+         "lon": "117.33",
+         "sum_pre": "2.30"
+      },
+      {
+         "Station_Id_C": "A3179",
+         "Station_Name": "滨海新区新港公园",
+         "lat": "39",
+         "lon": "117.7197",
+         "sum_pre": "2"
+      },
+      {
+         "Station_Id_C": "A2807",
+         "Station_Name": "滨海新区塞上街",
+         "lat": "39.2431",
+         "lon": "117.8181",
+         "sum_pre": "4.3"
+      },
+      {
+         "Station_Id_C": "A3103",
+         "Station_Name": "滨海新区新城",
+         "lat": "38.9794",
+         "lon": "117.5572",
+         "sum_pre": "1.9"
+      },
+      {
+         "Station_Id_C": "54645",
+         "Station_Name": "大港国家一般气象站",
+         "lat": "38.85",
+         "lon": "117.4667",
+         "sum_pre": "2.5"
+      },
+      {
+         "Station_Id_C": "A3170",
+         "Station_Name": "滨海新区海河防潮闸",
+         "lat": "38.9881",
+         "lon": "117.7131",
+         "sum_pre": "7"
+      },
+      {
+         "Station_Id_C": "A2663",
+         "Station_Name": "滨海新区钱圈水库",
+         "lat": "38.7781",
+         "lon": "117.2089",
+         "sum_pre": "5.8"
+      },
+      {
+         "Station_Id_C": "A2806",
+         "Station_Name": "滨海新区汉沽街",
+         "lat": "39.2528",
+         "lon": "117.7961",
+         "sum_pre": "3.8"
+      },
+      {
+         "Station_Id_C": "A3178",
+         "Station_Name": "滨海新区南港西港池",
+         "lat": "38.7289",
+         "lon": "117.6256",
+         "sum_pre": "0.8"
+      },
+      {
+         "Station_Id_C": "A3164",
+         "Station_Name": "滨海新区新河街",
+         "lat": "39.0331",
+         "lon": "117.7283",
+         "sum_pre": "22.5"
+      },
+      {
+         "Station_Id_C": "A3167",
+         "Station_Name": "滨海新区海晶西",
+         "lat": "39.0767",
+         "lon": "117.6917",
+         "sum_pre": "3.5"
+      },
+      {
+         "Station_Id_C": "A2609",
+         "Station_Name": "滨海新区李官庄",
+         "lat": "38.7147",
+         "lon": "117.1525",
+         "sum_pre": "5.5"
+      },
+      {
+         "Station_Id_C": "A2805",
+         "Station_Name": "滨海新区罗卜坨",
+         "lat": "39.3017",
+         "lon": "117.9331",
+         "sum_pre": "0.3"
+      },
+      {
+         "Station_Id_C": "A3173",
+         "Station_Name": "滨海新区开发西区东北组",
+         "lat": "39.1",
+         "lon": "117.5528",
+         "sum_pre": "9.3"
+      },
+      {
+         "Station_Id_C": "A3175",
+         "Station_Name": "滨海新区中新生态城",
+         "lat": "39.1175",
+         "lon": "117.7414",
+         "sum_pre": "3.8"
+      },
+      {
+         "Station_Id_C": "A2601",
+         "Station_Name": "滨海新区北大港水库",
+         "lat": "38.7653",
+         "lon": "117.3978",
+         "sum_pre": "3.2"
+      },
+      {
+         "Station_Id_C": "A3106",
+         "Station_Name": "滨海新区西部新城管委会",
+         "lat": "39.0103",
+         "lon": "117.5733",
+         "sum_pre": "5.5"
+      },
+      {
+         "Station_Id_C": "A3162",
+         "Station_Name": "滨海新区保税区",
+         "lat": "39.0033",
+         "lon": "117.7636",
+         "sum_pre": "5"
+      },
+      {
+         "Station_Id_C": "A3101",
+         "Station_Name": "滨海新区临港",
+         "lat": "38.9547",
+         "lon": "117.7086",
+         "sum_pre": "0.5"
+      },
+      {
+         "Station_Id_C": "A2803",
+         "Station_Name": "滨海新区蔡家堡",
+         "lat": "39.1803",
+         "lon": "117.8606",
+         "sum_pre": "0.2"
+      },
+      {
+         "Station_Id_C": "A2661",
+         "Station_Name": "滨海新区郭庄子",
+         "lat": "38.6439",
+         "lon": "117.2342",
+         "sum_pre": "5.8"
+      },
+      {
+         "Station_Id_C": "A3171",
+         "Station_Name": "滨海新区五洲码头",
+         "lat": "38.9781",
+         "lon": "117.7892",
+         "sum_pre": "0.9"
+      },
+      {
+         "Station_Id_C": "A2801",
+         "Station_Name": "滨海新区杨家泊",
+         "lat": "39.2964",
+         "lon": "117.9014",
+         "sum_pre": "0.4"
+      },
+      {
+         "Station_Id_C": "54623",
+         "Station_Name": "塘沽国家基本气象站",
+         "lat": "39.05",
+         "lon": "117.7167",
+         "sum_pre": "1.6"
+      },
+      {
+         "Station_Id_C": "A2862",
+         "Station_Name": "白庄",
+         "lat": "39.2692",
+         "lon": "117.86",
+         "sum_pre": "2.30"
+      }
+   ]
+}

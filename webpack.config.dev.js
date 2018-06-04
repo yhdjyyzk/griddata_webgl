@@ -10,7 +10,7 @@ module.exports = {
       bundle: './src/index.js'
    },
    output: {
-      path: __dirname + "/dist",
+      path: __dirname + "/dist/",
       filename: '[name].js',
    },
    module: {
@@ -61,7 +61,7 @@ module.exports = {
    },
    plugins: [
       new ExtractTextPlugin({filename: '[name].css'}),
-      new CleanWebpackPlugin(['dist']),
+      new CleanWebpackPlugin([]),
       new HtmlWebpackPlugin({
          title: "3d"
       })

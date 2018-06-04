@@ -1,7 +1,7 @@
-import './index.scss';
-
 import three_draw from './th';
 // ------------------------------
+document.body.style.padding = '0px';
+document.body.style.margin = '0px';
 let div = document.createElement('div');
 div.style.width = '1600px';
 div.style.height = '900px';
