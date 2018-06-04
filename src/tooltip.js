@@ -11,10 +11,12 @@ export function tooltip(html) {
 }
 
 export function hidden() {
+   document.body.style.cursor ='default';
    div.style.display = 'none';
 }
 
 export function show(x, y) {
+   document.body.style.cursor ='pointer';
    div.style.display = 'block';
    div.style.left = x + 15 + 'px';
    div.style.top = y - 15 + 'px';
