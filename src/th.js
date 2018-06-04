@@ -1,9 +1,10 @@
 import * as d3 from 'd3';
 import * as pathTool from 'zrender/src/tool/path';
 import * as THREE from 'three';
-import geo from './geo';
-import Point from './point';
 import OrbitControls from 'three-orbitcontrols';
+import Point from './point';
+import geo from './geo';
+import * as tooltip from './tooltip';
 
 export default function three_draw(dom, geojson, testData) {
    let width = getSize(dom.style.width);
@@ -41,7 +42,7 @@ export default function three_draw(dom, geojson, testData) {
    scene.add(axesHelper);
 
    let geoBounds;
-   let { projection, paths } = geo(geojson);
+   let {projection, paths} = geo(geojson);
    paths.forEach(path => {
       let pathProxy = pathTool.createPathProxyFromString(path);
       geoBounds = pathProxy.getBoundingRect();
@@ -67,7 +68,14 @@ export default function three_draw(dom, geojson, testData) {
          // }
       }
 
-      let geoGeometry = new THREE.ShapeBufferGeometry(geoShape);
+      let geoGeometry = new THREE.ExtrudeBufferGeometry(geoShape, {
+         steps: 2,
+         depth: -16,
+         bevelEnabled: true,
+         bevelThickness: 1,
+         bevelSize: 1,
+         bevelSegments: 1
+      });
       let geoMaterial = new THREE.ShaderMaterial({
          vertexShader: `
              void main() {
@@ -82,7 +90,8 @@ export default function three_draw(dom, geojson, testData) {
                gl_FragColor = vec4(1.0, 1.0, 0.0, 0.7);
              }
          `,
-         side: THREE.DoubleSide
+         side: THREE.DoubleSide,
+         // wireframe: true
       });
       let mesh = new THREE.Mesh(geoGeometry, geoMaterial);
 
@@ -157,15 +166,6 @@ export default function three_draw(dom, geojson, testData) {
    let points = new THREE.Points(pointsGeometry, pointMaterial);
    scene.add(points);
 
-   // let vector = new THREE.Vector2();
-
-   // let cubeGeometry = new THREE.BoxGeometry(20, 20, 100);
-   // let cubeMaterial = new THREE.MeshBasicMaterial({
-   //    color: 0xffff00
-   // });
-   // let cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-   // scene.add(cube);
-
    // 点的交互
    let renderDomRect = renderer.domElement.getBoundingClientRect();
    function onMouseMove(event) {
@@ -180,7 +180,24 @@ export default function three_draw(dom, geojson, testData) {
       let intersects = raycaster.intersectObject(points);
 
       if(intersects.length > 0) {
-         console.log(intersects);
+         // console.log(intersects);
+         let index = intersects[0].index;
+         let tooltipData = testData.sumPre[index];
+         let html = ``;
+
+         for(let k in tooltipData) {
+            let v = tooltipData[k];
+            html += `
+               <span>${k}: ${v}</span></br>
+            `
+         }
+
+         tooltip.tooltip(html);
+         let {pageX, pageY} = event;
+         tooltip.show(pageX, pageY);
+      }
+      else {
+         tooltip.hidden();
       }
    }
 
@@ -261,7 +278,6 @@ export default function three_draw(dom, geojson, testData) {
       // scene.rotation.y += 0.01;
       orbitControl.update();
       renderer.render(scene, camera);
-      // rayObject();
    }
 }
 
