@@ -16,7 +16,4 @@ document.body.appendChild(div);
    let testData = await testDataRes.json();
 
    three_draw(div, geojson, testData);
-
-   console.log(geojson);
-   console.log(testData);
 })());

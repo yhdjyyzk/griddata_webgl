@@ -12,18 +12,16 @@ export default function three_draw(dom, geojson, testData) {
 
    let scene = new THREE.Scene();
    scene.translateX(-200);
-   scene.translateY(-300);
+   scene.translateY(-200);
 
    let camera = new THREE.PerspectiveCamera(45, width / heigth, 0.1, 2000);
-   camera.position.set(200, 300, 800);
-   // camera.position.set(-500, 300, 800);
-   // camera.lookAt(200, 300, 0);
+   camera.position.set(0, 300, 300);
 
    let renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
       precision: 'highp',
-      // devicePixelRatio: 2
+      devicePixelRatio: window.devicePixelRatio
    });
    renderer.setSize(width, heigth);
    renderer.setClearColor(new THREE.Color(0, 0, 0));
@@ -43,6 +41,10 @@ export default function three_draw(dom, geojson, testData) {
 
    let geoBounds;
    let {projection, paths} = geo(geojson);
+   let group = new THREE.Object3D();
+   group.rotation.x = -Math.PI / 2.5;
+   scene.add(group);
+
    paths.forEach(path => {
       let pathProxy = pathTool.createPathProxyFromString(path);
       geoBounds = pathProxy.getBoundingRect();
@@ -61,11 +63,6 @@ export default function three_draw(dom, geojson, testData) {
                geoShape.lineTo(pathData[i + 1], pathData[i + 2]);
             }
          }
-
-         // @test 是否都是正值
-         // if(pathData[i+1]<0||pathData[i+2]<0){
-         //    console.log(pathData[i+1], pathData[i+2]);
-         // }
       }
 
       let geoGeometry = new THREE.ExtrudeBufferGeometry(geoShape, {
@@ -96,68 +93,64 @@ export default function three_draw(dom, geojson, testData) {
       let mesh = new THREE.Mesh(geoGeometry, geoMaterial);
 
       // mesh.rotation.x = -Math.PI / 6;
-      scene.add(mesh);
+      group.add(mesh);
    });
 
 
    let positions = [];
-   let colors = [];
 
    let pointsGeometry = new THREE.BufferGeometry();
-   let color = new THREE.Color();
-
-   let color_func = d3.scaleLinear().domain([0, 22.5]).range([0x0000ff, 0xff0000]);
-
+   let minZ = Number.MAX_VALUE;
+   let maxZ = Number.MIN_VALUE;
    testData.sumPre.forEach(s => {
       let pos = projection([s.lon, s.lat]);
-
-      let x = pos[0];
-      let y = pos[1];
       let z = s.sum_pre;
+      let z10 = z * 10;
 
-      let vx = x / 500;
-      let vy = y / 500;
-      let vz = 1.0;
-      // color.setRGB(vx, vy, vz);
-      color.setHex(Math.floor(color_func(s.sum_pre)));
-      colors.push(color.r, color.g, color.b);
-      // positions.push(pos[0], pos[1], 20);
+      minZ = minZ > z10 ? z10 : minZ;
+      maxZ = maxZ < z10 ? z10 : maxZ;
+
       positions.push(pos[0], pos[1], z * 10);
    });
 
    pointsGeometry.addAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-   pointsGeometry.addAttribute("a_color", new THREE.Float32BufferAttribute(colors, 3));
+
+   let uniforms = {
+      "maxZ": {value: maxZ},
+      "minZ": {value: minZ}
+   };
 
    let pointMaterial = new THREE.ShaderMaterial({
+      uniforms: uniforms,
       vertexShader: `
-         float parseColor(vec3 color);
-
-         attribute vec3 a_color;
-         varying vec3 v_color;
+         varying vec3 pos;
 
          void main() {
-            v_color = a_color;
+            pos = position;
             gl_PointSize = 10.0;
-            gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
-            // gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position[0], position[1], parseColor(a_color), 1.0 );
-         }
-
-         // parse vec3 color to num.
-         float parseColor(vec3 color) {
-            float numColor = color[0] * 255.0 * color[1] * 255.0 * color[2] * 255.0;
-            return numColor / 50000.0;
+            gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
          }
       `,
       fragmentShader: `
-         precision mediump float;
-         varying vec3 v_color;
+         varying vec3 pos;
+         uniform float maxZ;
+         uniform float minZ;
 
          void main() {
             if(distance(gl_PointCoord, vec2(0.5, 0.5)) > 0.5) {
                discard;
             }
             else {
-               gl_FragColor = vec4(v_color, 1.0);
+               vec3 color1 = vec3(0.0, 0.0, 1.0);
+               vec3 color2 = vec3(1.0, 0.0, 0.0);
+               float Z = pos.z;
+               float tempMaxZ = maxZ;
+               tempMaxZ = tempMaxZ - minZ;
+               Z = Z - minZ;
+               float mixVaue = Z / tempMaxZ;
+               vec3 color0 = mix(color1, color2, mixVaue);
+
+               gl_FragColor = vec4(color0, 1.0);
             }
          }
       `,
@@ -167,7 +160,7 @@ export default function three_draw(dom, geojson, testData) {
    });
 
    let points = new THREE.Points(pointsGeometry, pointMaterial);
-   // scene.add(points);
+   group.add(points);
 
    // 点的交互
    let renderDomRect = renderer.domElement.getBoundingClientRect();
@@ -183,7 +176,6 @@ export default function three_draw(dom, geojson, testData) {
       let intersects = raycaster.intersectObject(points);
 
       if(intersects.length > 0) {
-         // console.log(intersects);
          let index = intersects[0].index;
          let tooltipData = testData.sumPre[index];
          let html = ``;
@@ -221,8 +213,6 @@ export default function three_draw(dom, geojson, testData) {
       );
    }
 
-   // let zValues = [];
-
    function meshFunction(u0, v0, dest) {
       let result = dest || new THREE.Vector3();
       let u = geoWidth * u0 + geoX;
@@ -233,7 +223,7 @@ export default function three_draw(dom, geojson, testData) {
 
       let point = new Point(x, y);
       point.standPoints = positionArr;
-      let z = point.getZValue();  //根据反距离权重插值计算高程  
+      let z = point.getZValue();
 
       if(isNaN(x) || isNaN(y) || isNaN(z)) {
          result.x = 0;
@@ -246,57 +236,45 @@ export default function three_draw(dom, geojson, testData) {
          result.z = z;
       }
 
-      // zValues.push(result.z);
       return result;
    };
    let palneGeometry = new THREE.ParametricBufferGeometry(meshFunction, gridSize, gridSize);
-   // // console.log(zValues);
-   // let maxZ = Math.max(...zValues);
-   // let point_a_color_func = d3.scaleLinear().domain([0, maxZ]).range([0x0000ff, 0xff0000]);
-   // let point_a_colors = [];
-   // let point_color = new THREE.Color();
-   // zValues.forEach(z => {
-   //    point_color.setHex('0x' + `${Math.floor(point_a_color_func(z))}`.toString(16));
-   //    point_a_colors.push(point_color.r, point_color.g, point_color.b);
-   // });
-   // // console.log(point_a_colors);
-   // palneGeometry.addAttribute('a_color', new THREE.Float32BufferAttribute(point_a_colors, 3));
-   // console.log(palneGeometry);
    let planeMaterial = new THREE.ShaderMaterial({
       vertexShader: `
          varying vec3 pos;
 
          void main() {
             pos = position;
-            gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
+            gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
          }
       `,
       fragmentShader: `
          varying vec3 pos;
-         uniform float maxZ;
+         uniform float maxZ1;
+         uniform float minZ1;
 
          void main() {
-            gl_FragColor = vec4(pos / 220.0, 1.0);
-         }
+            vec3 color1 = vec3(0.0, 0.0, 1.0);
+            vec3 color2 = vec3(1.0, 0.0, 0.0);
+            float Z = pos.z;
+            float tempMaxZ = maxZ1;
+            tempMaxZ = tempMaxZ - minZ1;
+            Z = Z - minZ1;
+            float mixVaue = Z / tempMaxZ;
+            vec3 color0 = mix(color1, color2, mixVaue * 2.0);
 
-         // color linear
-         vec3 color_linear(float z) {
-            float r = 0.1;
-            float g = 0.2;
-            float b = 0.4;
-
-            return vec3(r, g, b);
+            gl_FragColor = vec4(color0, 1.0);
          }
       `,
       uniforms: {
-         // 'maxZ': {type: 'f', value: maxZ}
+         'maxZ1': {type: 'f', value: maxZ},
+         'minZ1': {type: 'f', value: minZ}
       },
       side: THREE.DoubleSide,
-      // wireframe: true
+      wireframe: true
    });
    let planeMesh = new THREE.Mesh(palneGeometry, planeMaterial);
-   scene.add(planeMesh);
-   scene.add(points);
+   group.add(planeMesh);
 
    // ************************
 
