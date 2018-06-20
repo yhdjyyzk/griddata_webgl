@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+// import * as d3 from 'd3';
 import * as pathTool from 'zrender/src/tool/path';
 import * as THREE from 'three';
 import OrbitControls from 'three-orbitcontrols';
@@ -15,7 +15,7 @@ export default function three_draw(dom, geojson, testData) {
    scene.translateY(-200);
 
    let camera = new THREE.PerspectiveCamera(45, width / heigth, 0.1, 2000);
-   camera.position.set(0, 300, 300);
+   camera.position.set(0, 0, 800);
 
    let renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -42,8 +42,11 @@ export default function three_draw(dom, geojson, testData) {
    let geoBounds;
    let {projection, paths} = geo(geojson);
    let group = new THREE.Object3D();
-   group.rotation.x = -Math.PI / 2.5;
+   // group.rotation.x = -Math.PI / 2.5;
    scene.add(group);
+
+   // let geoScene = scene.clone();
+   // geoScene.add(new THREE.AxesHelper(6000));
 
    paths.forEach(path => {
       let pathProxy = pathTool.createPathProxyFromString(path);
@@ -73,6 +76,7 @@ export default function three_draw(dom, geojson, testData) {
          bevelSize: 1,
          bevelSegments: 1
       });
+
       let geoMaterial = new THREE.ShaderMaterial({
          vertexShader: `
              void main() {
@@ -90,12 +94,18 @@ export default function three_draw(dom, geojson, testData) {
          side: THREE.DoubleSide,
          // wireframe: true
       });
+
       let mesh = new THREE.Mesh(geoGeometry, geoMaterial);
 
-      // mesh.rotation.x = -Math.PI / 6;
-      group.add(mesh);
+      // mesh.rotation.x = -Math.PI / 2.5;
+      // geoScene.add(mesh);
+      scene.add(mesh.clone());
    });
 
+   // let geoTarget = new THREE.WebGLRenderTarget(512, 512);
+   // renderer.setRenderTarget(geoTarget);
+   // renderer.render(geoScene, camera, geoTarget);
+   // renderer.setRenderTarget(null);
 
    let positions = [];
 
@@ -238,12 +248,16 @@ export default function three_draw(dom, geojson, testData) {
 
       return result;
    };
+
+   let texture = new THREE.TextureLoader().load('./data/map.png');
    let palneGeometry = new THREE.ParametricBufferGeometry(meshFunction, gridSize, gridSize);
    let planeMaterial = new THREE.ShaderMaterial({
       vertexShader: `
          varying vec3 pos;
+         varying vec2 v_Uv;
 
          void main() {
+            v_Uv = uv;
             pos = position;
             gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
          }
@@ -252,27 +266,42 @@ export default function three_draw(dom, geojson, testData) {
          varying vec3 pos;
          uniform float maxZ1;
          uniform float minZ1;
+         uniform sampler2D texture;
+         varying vec2 v_Uv;
 
          void main() {
-            vec3 color1 = vec3(0.0, 0.0, 1.0);
-            vec3 color2 = vec3(1.0, 0.0, 0.0);
-            float Z = pos.z;
-            float tempMaxZ = maxZ1;
-            tempMaxZ = tempMaxZ - minZ1;
-            Z = Z - minZ1;
-            float mixVaue = Z / tempMaxZ;
-            vec3 color0 = mix(color1, color2, mixVaue * 2.0);
+            vec4 pixel = texture2D(texture, v_Uv);
 
-            gl_FragColor = vec4(color0, 1.0);
+            if(pixel[0] == 0.0) {
+               discard;
+            }
+            else {
+               vec3 color1 = vec3(0.0, 0.0, 1.0);
+               vec3 color2 = vec3(1.0, 0.0, 0.0);
+               float Z = pos.z;
+               float tempMaxZ = maxZ1;
+               tempMaxZ = tempMaxZ - minZ1;
+               Z = Z - minZ1;
+               float mixVaue = Z / tempMaxZ;
+               vec3 color0 = mix(color1, color2, mixVaue * 2.0);
+
+               gl_FragColor = vec4(color0, 1.0);
+            }
          }
       `,
       uniforms: {
          'maxZ1': {type: 'f', value: maxZ},
-         'minZ1': {type: 'f', value: minZ}
+         'minZ1': {type: 'f', value: minZ},
+         'texture': {value: texture}
       },
       side: THREE.DoubleSide,
-      wireframe: true
+      // wireframe: true,
    });
+
+   // planeMaterial = new THREE.MeshBasicMaterial({
+   //    map: texture
+   // });
+
    let planeMesh = new THREE.Mesh(palneGeometry, planeMaterial);
    group.add(planeMesh);
 
@@ -285,6 +314,7 @@ export default function three_draw(dom, geojson, testData) {
       // scene.rotation.y += 0.01;
       orbitControl.update();
       renderer.render(scene, camera);
+      // renderer.render(geoScene, camera);
    }
 }
 
