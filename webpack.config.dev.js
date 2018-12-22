@@ -72,6 +72,9 @@ module.exports = {
          path.resolve(__dirname, "./")
       ]
    },
+   devServer: {
+    disableHostCheck: true
+   }
    // optimization: {
    //    splitChunks: {
    //       cacheGroups: {

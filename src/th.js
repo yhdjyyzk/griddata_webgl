@@ -26,6 +26,15 @@ export default function three_draw(dom, geojson, testData) {
    renderer.setSize(width, heigth);
    renderer.setClearColor(new THREE.Color(0, 0, 0));
 
+   let light = new THREE.SpotLight({
+       color: 0xffffff,
+       intensity: 1.0
+   })
+
+   light.position.set(0, -100, 900)
+
+   scene.add(light);
+
    // 控制
    let orbitControl = new OrbitControls(camera, renderer.domElement);
    orbitControl.enableDamping = true;
@@ -70,30 +79,33 @@ export default function three_draw(dom, geojson, testData) {
 
       let geoGeometry = new THREE.ExtrudeBufferGeometry(geoShape, {
          steps: 2,
-         depth: -16,
+         depth: 16,
          bevelEnabled: true,
          bevelThickness: 1,
          bevelSize: 1,
          bevelSegments: 1
       });
 
-      let geoMaterial = new THREE.ShaderMaterial({
-         vertexShader: `
-             void main() {
-                gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
-                gl_PointSize = 10.0;
-             }
-         `,
-         fragmentShader: `
-             precision mediump float;
+    //   let geoMaterial = new THREE.ShaderMaterial({
+    //      vertexShader: `
+    //          void main() {
+    //             gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 );
+    //             gl_PointSize = 10.0;
+    //          }
+    //      `,
+    //      fragmentShader: `
+    //          precision mediump float;
 
-             void main() {
-               gl_FragColor = vec4(1.0, 1.0, 0.0, 0.7);
-             }
-         `,
-         side: THREE.DoubleSide,
-         // wireframe: true
-      });
+    //          void main() {
+    //            gl_FragColor = vec4(1.0, 1.0, 0.0, 0.7);
+    //          }
+    //      `,
+    //      side: THREE.DoubleSide,
+    //      // wireframe: true
+    //   });
+    let geoMaterial = new THREE.MeshPhongMaterial({
+        color: 0xffff00
+    })
 
       let mesh = new THREE.Mesh(geoGeometry, geoMaterial);
 
